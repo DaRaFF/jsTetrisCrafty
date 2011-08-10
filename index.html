@@ -1,12 +1,17 @@
 <!DOCTYPE html><!--HTML5 doctype-->
 <html>
     <head>
-        <title>Tetris - created by @ralphmeier</title>
+        <title>jsTetris - created by @ralphmeier</title>
         <meta http-equiv="Content-type" content="text/html; charset=utf-8"> 
         <meta name = "viewport" content = "user-scalable=no, width=device-width">
-        <script src="http://code.jquery.com/jquery-1.6.2.min.js"></script>
-        <script src="lib/buzz/buzz.js"></script>
-        <script src="js/Tetris/Sound.js"></script>
+        <!--        <script src="http://code.jquery.com/jquery-1.6.2.min.js"></script>-->
+        <!--        <script src="lib/buzz/buzz.js"></script>-->
+        <!--        <script src="js/Tetris/Sound.js"></script>-->
+        <script type="text/javascript" src="lib/crafty.js"></script>
+        <script src="js/main.js"></script>
+        <style>
+            body, html { margin:0; padding: 0; overflow:hidden; font-family:Arial; font-size:20px }
+        </style>
     </head>
     <body>
 
@@ -17,18 +22,17 @@
                     <p id="score">Score: <span></span></p>
                     <p id="time">Time: <span></span></p>
                 </div>-->
-        <img id="gjs-loader" src="lib/gamejs/ajax-loader.gif">
-        <canvas id="gjs-canvas"></canvas>
-        <script src="lib/gamejs/yabble.js"></script>
-        <script src="lib/gamejs/gamejs-wrapped.js"></script>
+        <!--        <img id="gjs-loader" src="lib/gamejs/ajax-loader.gif">-->
+        <!--        <script src="lib/gamejs/yabble.js"></script>-->
+        <!--        <script src="lib/gamejs/gamejs-wrapped.js"></script>-->
 
         <link rel='stylesheet' href='style.css' media='all' />
         <script>
-            var buzzSound = new Sound();
-            buzzSound.init();
-            require.setModuleRoot('js/');
-            require.run('main');
+            //            var buzzSound = new Sound();
+            //            buzzSound.init();
+            //            require.setModuleRoot('js/');
+            //            require.run('main');
         </script>
-        <button id="musicOnButton" onclick="buzzSound.gameSound.play()">music on</button>
+        <!--        <button id="musicOnButton" onclick="buzzSound.gameSound.play()">music on</button>-->
     </body>
 </html>
