@@ -1,5 +1,3 @@
-var gamejs = require('gamejs');
-
 /**
  * Player
  * 
@@ -64,7 +62,5 @@ var Player = function(game, map){
         this.currentBlock.draw(display); 
     }
 }
-
-exports.Player = Player;
 
 

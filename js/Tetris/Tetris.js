@@ -1,10 +1,3 @@
-var gamejs = require('gamejs');
-var Map = require('Tetris/Map').Map;
-var Player = require('Tetris/Player').Player;
-var BlockFactory = require('Tetris/BlockFactory').BlockFactory;
-var BlockElements = require('Tetris/BlockElements').BlockElements;
-var Timer = require('Tetris/Timer').Timer;
-
 var Tetris = {
     game: null
 };
@@ -27,13 +20,13 @@ var Tetris = function(){
     this.init = function(){
 //        this.sound = new Sound();
 //        this.sound.init();
-        this.map = new Map(16, 16);
-        this.map.init();
-        this.player = new Player(this, this.map);
-        this.player.init();
-        this.timer = new Timer(this, 5000, function(game){
-            game.player.input = "DOWN";
-        });
+//        this.map = new Map(16, 16);
+//        this.map.init();
+//        this.player = new Player(this, this.map);
+//        this.player.init();
+//        this.timer = new Timer(this, 5000, function(game){
+//            game.player.input = "DOWN";
+//        });
     }
     
     this.update= function(){
@@ -54,7 +47,7 @@ var Tetris = function(){
    */
     this.createBlock = function(){
         var blockFactory = new BlockFactory();
-        return blockFactory.create(BlockElements, this.tileXStartPosition, this.tileYStartPosition);
+        return blockFactory.create(Crafty.tetris.blockElements, this.tileXStartPosition, this.tileYStartPosition);
     }
     
     this.updateGameState = function(){
@@ -67,8 +60,6 @@ var Tetris = function(){
     
     this.init();
 }
-
-exports.Tetris = Tetris;
 
 
 

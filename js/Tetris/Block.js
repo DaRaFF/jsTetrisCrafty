@@ -1,5 +1,76 @@
-var gamejs = require('gamejs');
-var screen = require('Tetris/screen').screen;
+Crafty.c("Block", {
+    _x: 0,
+    _y: 0,
+    _tileSize: 50,
+    _tiles: [[]],
+    __move: {
+        left: false, 
+        right: false, 
+        up: false, 
+        down: false
+    },    
+    Block: function(x,y) {
+        var move = this.__move;
+        var tileSize = this._tileSize;
+        for(var xCount = 0; xCount < 3; xCount++){
+            this._tiles[xCount] = [];
+            for(var yCount = 0; yCount < 3; yCount++){
+                this._tiles[xCount][yCount] = Crafty.e("2D, Canvas, block0")
+                .attr({
+                    x: x+xCount*this._tileSize, 
+                    y: y+yCount*this._tileSize, 
+                    z: 1
+                })
+            }
+        }
+        var tiles = this._tiles;
+
+        this.bind('EnterFrame', function() {
+            var xMove = 0;
+            var yMove = 0;
+            
+            if (move.right){xMove += tileSize} 
+            if (move.left){xMove -= tileSize} 
+            if (move.up){yMove -= tileSize} 
+            if (move.down){yMove += tileSize} 
+            
+            for(var x = 0; x < tiles.length; x++){
+                for(var y = 0; y < tiles.length; y++){
+                    tiles[x][y].attr({
+                        x: tiles[x][y]._x + xMove, 
+                        y: tiles[x][y]._y + yMove
+                        }); 
+                }
+            }
+        }).bind('KeyDown', function(e) {
+            // Default movement booleans to false
+            move.right = move.left = move.down = move.up = false;
+
+            // If keys are down, set the direction
+            if (e.keyCode === Crafty.keys.RIGHT_ARROW) move.right = true;
+            if (e.keyCode === Crafty.keys.LEFT_ARROW) move.left = true;
+            if (e.keyCode === Crafty.keys.UP_ARROW) move.up = true;
+            if (e.keyCode === Crafty.keys.DOWN_ARROW) move.down = true;
+
+        }).bind('KeyUp', function(e) {
+            // If key is released, stop moving
+            if (e.keyCode === Crafty.keys.RIGHT_ARROW) move.right = false;
+            if (e.keyCode === Crafty.keys.LEFT_ARROW) move.left = false;
+            if (e.keyCode === Crafty.keys.UP_ARROW) move.up = false;
+            if (e.keyCode === Crafty.keys.DOWN_ARROW) move.down = false;
+
+        }).bind('BlockMoveRight', function(e) {
+            // If key is released, stop moving
+            if (e.keyCode === Crafty.keys.RIGHT_ARROW) move.right = false;
+            if (e.keyCode === Crafty.keys.LEFT_ARROW) move.left = false;
+            if (e.keyCode === Crafty.keys.UP_ARROW) move.up = false;
+            if (e.keyCode === Crafty.keys.DOWN_ARROW) move.down = false;
+
+        });
+
+        return this;
+    }
+});
 
 /**
  * Block
@@ -19,24 +90,24 @@ var screen = require('Tetris/screen').screen;
 var Block = function(shape, tileX, tileY){
     var that = this;
     /** The x position of the block on the map in tiles
-    * @type Number
-    */
+     * @type Number
+     */
     this.tileX = tileX;
     /** The y position of the block on the map in tiles
-    * @type Number
-    */
+     * @type Number
+     */
     this.tileY = tileY;
     /** 
-    * The shape of the block in tiles
-    * 
-    * Example:
-    * [ 
-    *   [0,1,0],
-    *   [0,1,0],
-    *   [1,1,0],    
-    * ]
-    * @type Array
-    */
+     * The shape of the block in tiles
+     * 
+     * Example:
+     * [ 
+     *   [0,1,0],
+     *   [0,1,0],
+     *   [1,1,0],    
+     * ]
+     * @type Array
+     */
     this.shape = shape;
     this.shapeSurface;
     this.tetraederSurface;
@@ -47,10 +118,10 @@ var Block = function(shape, tileX, tileY){
     }
     
     /**
-   * Block rendering
-   *
-   * @return {void} 
-   */
+     * Block rendering
+     *
+     * @return {void} 
+     */
     this.draw = function(display){
         if(this.isUpdated){
             this.tetraederSurface = new gamejs.Surface([screen.canvas.width, screen.canvas.height]);
@@ -73,11 +144,11 @@ var Block = function(shape, tileX, tileY){
     }
     
     /**
-    * Turns the shape in given direction
-    *
-    * @param {String} direction 'right'|'left'
-    * @return {void}
-    */
+     * Turns the shape in given direction
+     *
+     * @param {String} direction 'right'|'left'
+     * @return {void}
+     */
     this.turn = function(direction){
         this.isUpdated = true;
         var oldShape = this.shape;
@@ -117,13 +188,13 @@ var Block = function(shape, tileX, tileY){
     }
     
     /**
-   * Collision detection between block and the map if the block is moving in x,y axis
-   *
-   * @param {Map} map
-   * @param {integer} dTilesX check collision if block is moved dTilesX in x-Axis
-   * @param {integer} dTilesY check collision if block is moved dTilesX in y-Axis
-   * @returns boolean
-   */
+     * Collision detection between block and the map if the block is moving in x,y axis
+     *
+     * @param {Map} map
+     * @param {integer} dTilesX check collision if block is moved dTilesX in x-Axis
+     * @param {integer} dTilesY check collision if block is moved dTilesX in y-Axis
+     * @returns boolean
+     */
     this.collide = function(map, dTilesX, dTilesY){
         for(var y = 0; y < that.shape.length; y++){
             for(var x = 0; x < that.shape[0].length; x++){
@@ -146,5 +217,3 @@ var Block = function(shape, tileX, tileY){
         return false;
     }
 }
-
-exports.Block = Block;

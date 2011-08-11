@@ -1,14 +1,15 @@
-body{
+body {
     background-color:#fff;
     color:#000;
     font-family:Arial;
-    margin:0px;padding:0px;
+    margin:0px;
+    padding:0px;
     overflow: hidden;
 }
 
-canvas#gjs-canvas{
+canvas{
+    float: right;
     border: 1px dotted #f06;
-    margin-left: 0px;
 }
 
 /* Prevent copy paste for all elements except text fields */

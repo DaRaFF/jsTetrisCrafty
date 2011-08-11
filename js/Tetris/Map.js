@@ -1,6 +1,3 @@
-var gamejs = require('gamejs');
-var screen = require('Tetris/screen').screen;
-
 /**
  * Map
  *
@@ -129,7 +126,5 @@ var Map = function(tilesX, tilesY){
         return false;
     }
 }
-
-exports.Map = Map;
 
 
