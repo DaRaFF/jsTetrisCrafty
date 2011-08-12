@@ -14,45 +14,27 @@ window.onload = function() {
         block6: [1,1]
     });
     
+    $(window).bind('resize', function() {
+        Crafty.trigger('Resize');
+    });
+    
     //the loading screen that will display while our assets load
     Crafty.scene("start", function() {
         //load takes an array of assets and a callback when complete
-        Crafty.load(["img/blocks.png", "img/icon.png", "lib/gamejs/ajax-loader.gif"], function() {
-            $.ajax({
-                url: "js/Tetris/BlockElements.js", 
-                async: false
-            });
-            $.ajax({
-                url: "js/Tetris/BlockFactory.js", 
-                async: false
-            });
-            $.ajax({
-                url: "js/Tetris/Block.js", 
-                async: false
-            });
-            $.ajax({
-                url: "js/Tetris/Player.js", 
-                async: false
-            });
-            $.ajax({
-                url: "js/Tetris/Map.js", 
-                async: false
-            });
-            $.ajax({
-                url: "js/Tetris/Tetris.js", 
-                async: false
-            });
-            Crafty.e("2D, Canvas, Keyboard")
-            .bind("EnterFrame", function(e) {
-                Crafty.scene("game");
-                if(this.isDown("LEFT_ARROW") 
-                    || this.isDown("RIGHT_ARROW")
-                    || this.isDown("UP_ARROW")
-                    || this.isDown("DOWN_ARROW")
-                    ) {
-                }
+        Crafty.load(["img/blocks.png"], 
+            function() {
+                $.ajax({url: "js/Tetris/BlockElements.js", async: false});
+                $.ajax({url: "js/Tetris/BlockFactory.js", async: false});
+                $.ajax({url: "js/Tetris/Block.js", async: false});
+                $.ajax({url: "js/Tetris/Player.js", async: false});
+                $.ajax({url: "js/Tetris/Map.js", async: false});
+                $.ajax({url: "js/Tetris/Tetris.js", async: false});
+                
+                Crafty.e("2D, Canvas, Keyboard")
+                .bind("EnterFrame", function(e) {
+                    Crafty.scene("game");
+                })
             })
-        })
         Crafty.background("#000");
         //black background with some loading text
         Crafty.e("2D, DOM, Text").attr({
@@ -101,6 +83,15 @@ window.onload = function() {
             x: 50, 
             y: 50, 
             z: 1
-        }).Block(0,0)
+        })
+        .Block(0,0);
+        
+        map = Crafty.e("2D, Canvas, Map")
+        .attr({
+            x: 0, 
+            y: 250, 
+            z: 1
+        })
+        .Map(0,500);
     });
 };

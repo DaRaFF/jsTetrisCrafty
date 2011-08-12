@@ -1,3 +1,32 @@
+Crafty.c("Map", {
+    _name: "Map",
+    _tileSize: 50,
+    _tiles: [[]],
+    __move: {
+        left: false, 
+        right: false, 
+        up: false, 
+        down: false
+    },    
+    Map: function(x,y) {
+        for(var xCount = 0; xCount < 15; xCount++){
+            this._tiles[xCount] = [];
+            var yCount = 0;
+            this._tiles[xCount][yCount] = Crafty.e("2D, Canvas, Map, block0")
+            .attr({
+                x: x+xCount*this._tileSize, 
+                y: y+yCount*this._tileSize, 
+                z: 1
+            })
+        }
+
+        return this;
+    },
+    helloTest: function(){
+        console.log("helloTest");
+    }
+});
+
 /**
  * Map
  *

@@ -1,6 +1,5 @@
 Crafty.c("Block", {
-    _x: 0,
-    _y: 0,
+    _name: "Block",
     _tileSize: 50,
     _tiles: [[]],
     __move: {
@@ -8,19 +7,25 @@ Crafty.c("Block", {
         right: false, 
         up: false, 
         down: false
-    },    
+    },  
     Block: function(x,y) {
         var move = this.__move;
         var tileSize = this._tileSize;
         for(var xCount = 0; xCount < 3; xCount++){
             this._tiles[xCount] = [];
             for(var yCount = 0; yCount < 3; yCount++){
-                this._tiles[xCount][yCount] = Crafty.e("2D, Canvas, block0")
+                this._tiles[xCount][yCount] = Crafty.e("2D, Canvas, block0, Collision")
                 .attr({
                     x: x+xCount*this._tileSize, 
                     y: y+yCount*this._tileSize, 
-                    z: 1
+                    z: 1,
+                    lastPosX: x+xCount*this._tileSize,
+                    lastPosY: y+yCount*this._tileSize
                 })
+                .collision()
+                .onHit("Map", function(hit) {
+                    console.log(hit[0].obj._name);
+                }); 
             }
         }
         var tiles = this._tiles;
@@ -36,10 +41,13 @@ Crafty.c("Block", {
             
             for(var x = 0; x < tiles.length; x++){
                 for(var y = 0; y < tiles.length; y++){
-                    tiles[x][y].attr({
-                        x: tiles[x][y]._x + xMove, 
-                        y: tiles[x][y]._y + yMove
-                        }); 
+                    tiles[x][y]
+                    .attr({
+                        lastPosX: tiles[x][y].x,
+                        lastPosY: tiles[x][y].y
+                    })
+                    .move('s',yMove)
+                    .move('e',xMove);
                 }
             }
         }).bind('KeyDown', function(e) {
@@ -53,6 +61,8 @@ Crafty.c("Block", {
             if (e.keyCode === Crafty.keys.DOWN_ARROW) move.down = true;
 
         }).bind('KeyUp', function(e) {
+            console.log(tiles[0][0].y);
+            console.log(tiles[0][0].lastPosY);
             // If key is released, stop moving
             if (e.keyCode === Crafty.keys.RIGHT_ARROW) move.right = false;
             if (e.keyCode === Crafty.keys.LEFT_ARROW) move.left = false;
@@ -66,8 +76,9 @@ Crafty.c("Block", {
             if (e.keyCode === Crafty.keys.UP_ARROW) move.up = false;
             if (e.keyCode === Crafty.keys.DOWN_ARROW) move.down = false;
 
+        }).bind('Resize', function(data) {
+            console.log(Crafty.DOM.window.height);
         });
-
         return this;
     }
 });
