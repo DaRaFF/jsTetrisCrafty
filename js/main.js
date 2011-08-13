@@ -1,6 +1,6 @@
 window.onload = function() {
     //start crafty
-    Crafty.init(800, 600);
+    Crafty.init();
     Crafty.canvas.init();
 	
     //turn the sprite map into usable components
@@ -76,6 +76,18 @@ window.onload = function() {
     
         
     Crafty.scene("game", function() {
+        Crafty.extend({
+            tetris: {
+                xStart: 0, //x start position in px
+                yStart: 0, //y start position in px
+                tileSize: 20, //tileSize in px
+                tilesX: 10, //tiles count in x-axis
+                tilesY: 18 //tiles count in y-axis
+            }
+        });
+        
+        console.log(Crafty.tetris);
+        console.log(Crafty.tetris.tileSize);
         //        Tetris.game = new Tetris();
         //create our player entity with some premade components
         player = Crafty.e("2D, Canvas, Keyboard, Block")
@@ -92,6 +104,6 @@ window.onload = function() {
             y: 250, 
             z: 1
         })
-        .Map(0,500);
+        .Map(0,0,20);
     });
 };

@@ -2,28 +2,45 @@ Crafty.c("Map", {
     _name: "Map",
     _tileSize: 50,
     _tiles: [[]],
+    _tilesX: 10,
+    _tilesY: 18,
     __move: {
         left: false, 
         right: false, 
         up: false, 
         down: false
     },    
-    Map: function(x,y) {
-        for(var xCount = 0; xCount < 15; xCount++){
+    Map: function(x,y,tileSize,tilesX,tilesY) {
+        this._tilesX = tilesX || this._tilesX;
+        this._tilesY = tilesY || this._tilesY;
+        this._tileSize = tileSize || this._tilesY;
+        
+        for (var xCount = 0; xCount < this._tilesX ; xCount++) {
             this._tiles[xCount] = [];
-            var yCount = 0;
-            this._tiles[xCount][yCount] = Crafty.e("2D, Canvas, Map, block0")
-            .attr({
-                x: x+xCount*this._tileSize, 
-                y: y+yCount*this._tileSize, 
-                z: 1
-            })
+            for (var yCount = 0; yCount < this._tilesY; yCount++) {
+                this._tiles[xCount][yCount] = null;
+                if(yCount === this._tilesY-1){
+                    this._tiles[xCount][yCount] = Crafty.e("2D, Canvas, Map, block0")
+                    .attr({
+                        x: x+xCount*this._tileSize, 
+                        y: y+yCount*this._tileSize, 
+                        z: 1,
+                        w: this._tileSize,
+                        h: this._tileSize
+                    })
+                }
+            }
+    
         }
-
         return this;
     },
-    helloTest: function(){
-        console.log("helloTest");
+    /**
+   * Fixes a block in the map
+   *
+   * @param {Block} block
+   */
+    fixBlock: function(block){
+        console.log(block);
     }
 });
 
