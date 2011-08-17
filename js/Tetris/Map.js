@@ -4,23 +4,17 @@ Crafty.c("Map", {
     _tiles: [[]],
     _tilesX: 10,
     _tilesY: 18,
-    __move: {
-        left: false, 
-        right: false, 
-        up: false, 
-        down: false
-    },    
-    Map: function(x,y,tileSize,tilesX,tilesY) {
+    Map: function(x,y,tilesX,tilesY) {
+        this._tileSize = Crafty.tetris.tileSize;
         this._tilesX = tilesX || this._tilesX;
         this._tilesY = tilesY || this._tilesY;
-        this._tileSize = tileSize || this._tilesY;
         
         for (var xCount = 0; xCount < this._tilesX ; xCount++) {
             this._tiles[xCount] = [];
             for (var yCount = 0; yCount < this._tilesY; yCount++) {
                 this._tiles[xCount][yCount] = null;
                 if(yCount === this._tilesY-1){
-                    this._tiles[xCount][yCount] = Crafty.e("2D, Canvas, Map, block0")
+                    this._tiles[xCount][yCount] = Crafty.e("2D, Canvas, map, block, block0")
                     .attr({
                         x: x+xCount*this._tileSize, 
                         y: y+yCount*this._tileSize, 
@@ -32,6 +26,10 @@ Crafty.c("Map", {
             }
     
         }
+        this.bind("MapCollision", function(block){
+            this.fixBlock(block);
+            Crafty.e("2D, Canvas, Keyboard, Block, block").Block(0,0);
+        })
         return this;
     },
     /**
@@ -40,7 +38,41 @@ Crafty.c("Map", {
    * @param {Block} block
    */
     fixBlock: function(block){
-        console.log(block);
+        for (var xCount = 0; xCount < block.length ; xCount++) {
+            for (var yCount = 0; yCount < block[0].length; yCount++) {
+                if(block[xCount] && block[xCount][yCount]){
+                    var tilesXPos = block[xCount][yCount].lastTilePosX;
+                    var tilesYPos = block[xCount][yCount].lastTilePosY;
+                    
+                    if(tilesXPos === -1){tilesXPos = 0;}
+                    
+//                    block[xCount][yCount].destroy();
+//                    block[xCount][yCount] = undefined;
+                    
+//                    console.log(tilesXPos);
+//                    console.log(tilesYPos);
+                    
+                    this._tiles[tilesXPos][tilesYPos] = block[xCount][yCount];
+                    this._tiles[tilesXPos][tilesYPos]
+                    .attr({
+                        x: tilesXPos * Crafty.tetris.tileSize, 
+                        y: tilesYPos * Crafty.tetris.tileSize, 
+                        z: 1,
+                        w: Crafty.tetris.tileSize,
+                        h: Crafty.tetris.tileSize
+                    })
+                    .addComponent("map");
+//                    this._tiles[tilesXPos][tilesYPos] = Crafty.e("2D, Canvas, map, block, block0")
+//                    .attr({
+//                        x: tilesXPos * Crafty.tetris.tileSize, 
+//                        y: tilesYPos * Crafty.tetris.tileSize, 
+//                        z: 1,
+//                        w: Crafty.tetris.tileSize,
+//                        h: Crafty.tetris.tileSize
+//                    })
+                }
+            }
+        }
     }
 });
 

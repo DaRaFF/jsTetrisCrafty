@@ -24,7 +24,6 @@ window.onload = function() {
         Crafty.load(["img/blocks.png"], 
             function() {
                 $.ajax({url: "js/Tetris/BlockElements.js", async: false});
-                $.ajax({url: "js/Tetris/BlockFactory.js", async: false});
                 $.ajax({url: "js/Tetris/Block.js", async: false});
                 $.ajax({url: "js/Tetris/Player.js", async: false});
                 $.ajax({url: "js/Tetris/Map.js", async: false});
@@ -80,30 +79,20 @@ window.onload = function() {
             tetris: {
                 xStart: 0, //x start position in px
                 yStart: 0, //y start position in px
-                tileSize: 20, //tileSize in px
+                tileSize: 25, //tileSize in px
                 tilesX: 10, //tiles count in x-axis
                 tilesY: 18 //tiles count in y-axis
             }
         });
         
-        console.log(Crafty.tetris);
-        console.log(Crafty.tetris.tileSize);
         //        Tetris.game = new Tetris();
         //create our player entity with some premade components
         player = Crafty.e("2D, Canvas, Keyboard, Block")
-        .attr({
-            x: 50, 
-            y: 50, 
-            z: 1
-        })
         .Block(0,0);
         
+        game = Crafty.e("");
+        
         map = Crafty.e("2D, Canvas, Map")
-        .attr({
-            x: 0, 
-            y: 250, 
-            z: 1
-        })
-        .Map(0,0,20);
+        .Map(0,0);
     });
 };

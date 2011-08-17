@@ -1,6 +1,6 @@
 Crafty.c("Block", {
     _name: "Block",
-    _tileSize: 50,
+    _tileSize: 20,
     _tiles: [[]],
     __move: {
         left: false, 
@@ -9,29 +9,37 @@ Crafty.c("Block", {
         down: false
     },  
     Block: function(x,y) {
-        this._tileSize = Crafty.tetris.tileSize;
+        this.requires("BlockElements");
+        var tileSize = this._tileSize = Crafty.tetris.tileSize;
         var that = this;
         var move = this.__move;
-        var tileSize = this._tileSize;
-        for(var xCount = 0; xCount < 3; xCount++){
+        var blockElement = this.getRandomBlockElement();
+        console.log(blockElement);
+        this._tiles = [];
+        for(var xCount = 0; xCount < blockElement.shape.length; xCount++){
             this._tiles[xCount] = [];
-            for(var yCount = 0; yCount < 3; yCount++){
-                this._tiles[xCount][yCount] = Crafty.e("2D, Canvas, block0, Collision")
-                .attr({
-                    x: x+xCount*this._tileSize, 
-                    y: y+yCount*this._tileSize, 
-                    z: 1,
-                    w: this._tileSize,
-                    h: this._tileSize,
-                    lastPosX: x+xCount*this._tileSize,
-                    lastPosY: y+yCount*this._tileSize,
-                    lastTilePosX: 0, //relative x position in map in tiles
-                    lastTilePosY: 0 //relative y position in map in tiles
-                })
-                .collision()
-                .onHit("Map", function(obj) {
-                    obj[0].obj.fixBlock(that._tiles);
-                }); 
+            for(var yCount = 0; yCount < blockElement.shape[0].length; yCount++){
+                if(blockElement.shape[xCount][yCount]){
+                    console.log(this._tileSize);
+                    this._tiles[xCount][yCount] = Crafty.e("2D, Canvas, Block, block, block0, Collision")
+                    .attr({
+                        x: x+xCount*this._tileSize, 
+                        y: y+yCount*this._tileSize, 
+                        z: 1,
+                        w: this._tileSize,
+                        h: this._tileSize,
+                        lastPosX: x+xCount*this._tileSize,
+                        lastPosY: y+yCount*this._tileSize,
+                        lastTilePosX: xCount, //relative x position in map in tiles
+                        lastTilePosY: yCount-1 //relative y position in map in tiles
+                    })
+                    .onHit("map", function() {
+                        Crafty.trigger("MapCollision", that._tiles);
+                        that.destroy();
+                    }); 
+                } else{
+                    this._tiles[xCount][yCount] = 0;
+                }
             }
         }
         var tiles = this._tiles;
@@ -42,26 +50,27 @@ Crafty.c("Block", {
             var xTileMove = 0;
             var yTileMove = 0;
             
-            if (move.right){xMove += tileSize; xTileMove +=1;} 
-            if (move.left){xMove -= tileSize; xTileMove -=1;} 
-            if (move.up){yMove -= tileSize; yTileMove -=1;} 
-            if (move.down){yMove += tileSize; yTileMove +=1;} 
-            
+            if (move.right){xMove += tileSize;xTileMove +=1;} 
+            if (move.left){xMove -= tileSize;xTileMove -=1;} 
+            if (move.up){yMove -= tileSize;yTileMove -=1;} 
+            if (move.down){yMove += tileSize;yTileMove +=1;} 
+            move.right = move.left = move.down = move.up = false;
             for(var x = 0; x < tiles.length; x++){
-                for(var y = 0; y < tiles.length; y++){
-                    tiles[x][y]
-                    .attr({
-                        lastPosX: tiles[x][y].x,
-                        lastPosY: tiles[x][y].y,
-                        lastTilePosX: tiles[x][y].lastTilePosX += xTileMove, 
-                        lastTilePosY: tiles[x][y].lastTilePosY += yTileMove 
-                    })
-                    .move('s',yMove)
-                    .move('e',xMove);
+                for(var y = 0; y < tiles[0].length; y++){
+                    if(tiles[x][y] != 0){
+                        tiles[x][y]
+                        .attr({
+                            lastPosX: tiles[x][y].x,
+                            lastPosY: tiles[x][y].y,
+                            lastTilePosX: tiles[x][y].lastTilePosX += xTileMove, 
+                            lastTilePosY: tiles[x][y].lastTilePosY += yTileMove 
+                        })
+                        .move('s',yMove)
+                        .move('e',xMove);
+                    }
                 }
             }
         }).bind('KeyDown', function(e) {
-            // Default movement booleans to false
             move.right = move.left = move.down = move.up = false;
             // If keys are down, set the direction
             if (e.keyCode === Crafty.keys.RIGHT_ARROW) move.right = true;
@@ -76,15 +85,6 @@ Crafty.c("Block", {
             if (e.keyCode === Crafty.keys.UP_ARROW) move.up = false;
             if (e.keyCode === Crafty.keys.DOWN_ARROW) move.down = false;
 
-        }).bind('BlockMoveRight', function(e) {
-            // If key is released, stop moving
-            if (e.keyCode === Crafty.keys.RIGHT_ARROW) move.right = false;
-            if (e.keyCode === Crafty.keys.LEFT_ARROW) move.left = false;
-            if (e.keyCode === Crafty.keys.UP_ARROW) move.up = false;
-            if (e.keyCode === Crafty.keys.DOWN_ARROW) move.down = false;
-
-        }).bind('Resize', function(data) {
-            console.log(Crafty.DOM.window.height);
         });
         return this;
     }
