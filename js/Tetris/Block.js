@@ -11,38 +11,9 @@ Crafty.c("Block", {
     Block: function(x,y) {
         this.requires("BlockElements");
         var tileSize = this._tileSize = Crafty.tetris.tileSize;
-        var that = this;
         var move = this.__move;
-        var blockElement = this.getRandomBlockElement();
-        console.log(blockElement);
-        this._tiles = [];
-        for(var xCount = 0; xCount < blockElement.shape.length; xCount++){
-            this._tiles[xCount] = [];
-            for(var yCount = 0; yCount < blockElement.shape[0].length; yCount++){
-                if(blockElement.shape[xCount][yCount]){
-                    console.log(this._tileSize);
-                    this._tiles[xCount][yCount] = Crafty.e("2D, Canvas, Block, block, block0, Collision")
-                    .attr({
-                        x: x+xCount*this._tileSize, 
-                        y: y+yCount*this._tileSize, 
-                        z: 1,
-                        w: this._tileSize,
-                        h: this._tileSize,
-                        lastPosX: x+xCount*this._tileSize,
-                        lastPosY: y+yCount*this._tileSize,
-                        lastTilePosX: xCount, //relative x position in map in tiles
-                        lastTilePosY: yCount-1 //relative y position in map in tiles
-                    })
-                    .onHit("map", function() {
-                        Crafty.trigger("MapCollision", that._tiles);
-                        that.destroy();
-                    }); 
-                } else{
-                    this._tiles[xCount][yCount] = 0;
-                }
-            }
-        }
-        var tiles = this._tiles;
+
+        var tiles = this._tiles = this.createBlockTiles(this);
 
         this.bind('EnterFrame', function() {
             var xMove = 0;
